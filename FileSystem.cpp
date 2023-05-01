@@ -475,11 +475,15 @@ void GetDetailedDirectoryInfo()
     std::cout << "Detailed information about directory: " << current_dir << "\n";
 
 
-    for (const auto& entry : std::filesystem::directory_iterator(current_dir)) {
-        std::cout << std::left << std::setw(30) << entry.path().filename().string() << " "; // Name
-        std::cout << std::left << std::setw(15) << std::filesystem::file_size(entry.path()) << " "; // Size
-        std::cout << std::left << std::setw(30) << std::filesystem::last_write_time(entry.path()).time_since_epoch().count() << " "; // Last Modified Time
-        std::cout << std::left << std::setw(10) << ((std::filesystem::is_directory(entry.status())) ? "Directory" : "File") << "\n"; // Type
+    struct stat file_stat;
+    if (stat(filepath.c_str(), &file_stat) == 0) {
+        std::cout << "Detailed information about file: " << filepath << "\n";
+        std::cout << std::left << std::setw(20) << "File size:" << std::right << std::setw(15) << file_stat.st_size << " bytes\n";
+        std::cout << std::left << std::setw(20) << "Owner UID:" << std::right << std::setw(15) << file_stat.st_uid << "\n";
+        std::cout << std::left << std::setw(20) << "Last access time:" << std::right << std::setw(15) << std::ctime(&file_stat.st_atime);
+        std::cout << std::left << std::setw(20) << "Last modification time:" << std::right << std::setw(15) << std::ctime(&file_stat.st_mtime);
+    } else {
+        std::cerr << "Error getting file info for file: " << filepath << "\n";
     }
 }
 
