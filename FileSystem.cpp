@@ -387,27 +387,27 @@ void DisplayDirectory()
 
 void DisplayDirectory(const std::string& dirname, int level) 
 {
-    DIR* dir = opendir(dirname.c_str());
-    if (dir == NULL) {
-        std::cerr << "Error opening directory: " << dirname << std::endl;
+    DIR* directory = opendir(directory_name.c_str());
+    if (directory == NULL) {
+        std::cerr << "Error opening directory: " << directory_name << std::endl;
         return;
     }
 
     struct dirent* entry;
-    while ((entry = readdir(dir)) != NULL) {
+    while ((entry = readdir(directory)) != NULL) {
         if (entry->d_type == DT_DIR) {
             if (strcmp(entry->d_name, ".") == 0 || strcmp(entry->d_name, "..") == 0) {
                 continue;
             }
             std::cout << std::string(level, '\t') << entry->d_name << "/" << std::endl;
-            std::string path = dirname + "/" + entry->d_name;
-            DisplayDirectory(path, level + 1);
+            std::string path = directory_name + "/" + entry->d_name;
+            display_directory(path, level + 1);
         } else {
             std::cout << std::string(level, '\t') << entry->d_name << std::endl;
         }
     }
 
-    closedir(dir);
+    closedir(directory);
 }
 
 void GetBasicFileInfo() 
