@@ -385,7 +385,7 @@ void DisplayDirectory()
     DisplayDirectory(dirname, 0);
 }
 
-void DisplayDirectory(const std::string& dirname, int level) 
+void DisplayDirectory(const std::string& directory_name, int level) 
 {
     DIR* directory = opendir(directory_name.c_str());
     if (directory == NULL) {
@@ -401,7 +401,7 @@ void DisplayDirectory(const std::string& dirname, int level)
             }
             std::cout << std::string(level, '\t') << entry->d_name << "/" << std::endl;
             std::string path = directory_name + "/" + entry->d_name;
-            display_directory(path, level + 1);
+            DisplayDirectory(path, level + 1);
         } else {
             std::cout << std::string(level, '\t') << entry->d_name << std::endl;
         }
@@ -471,9 +471,7 @@ void GetBasicDirectoryInfo()
 
 void GetDetailedDirectoryInfo() 
 {
-    std::filesystem::path current_dir = std::filesystem::current_path();
-    std::cout << "Detailed information about directory: " << current_dir << "\n";
-
+    std::filesystem::path filepath = std::filesystem::current_path();
 
     struct stat file_stat;
     if (stat(filepath.c_str(), &file_stat) == 0) {
